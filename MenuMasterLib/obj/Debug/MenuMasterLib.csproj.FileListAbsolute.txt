@@ -1,6 +1,0 @@
-C:\Users\Илья Жаров\source\repos\Jason3\MenuMasterLib\bin\Debug\MenuMasterLib.dll
-C:\Users\Илья Жаров\source\repos\Jason3\MenuMasterLib\bin\Debug\MenuMasterLib.pdb
-C:\Users\Илья Жаров\source\repos\Jason3\MenuMasterLib\obj\Debug\MenuMasterLib.csprojAssemblyReference.cache
-C:\Users\Илья Жаров\source\repos\Jason3\MenuMasterLib\obj\Debug\MenuMasterLib.csproj.CoreCompileInputs.cache
-C:\Users\Илья Жаров\source\repos\Jason3\MenuMasterLib\obj\Debug\MenuMasterLib.dll
-C:\Users\Илья Жаров\source\repos\Jason3\MenuMasterLib\obj\Debug\MenuMasterLib.pdb

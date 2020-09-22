@@ -1,6 +1,0 @@
-C:\Users\Илья Жаров\source\repos\Jason3\StepRepository\bin\Debug\StepRepository.dll
-C:\Users\Илья Жаров\source\repos\Jason3\StepRepository\bin\Debug\StepRepository.pdb
-C:\Users\Илья Жаров\source\repos\Jason3\StepRepository\obj\Debug\StepRepository.csprojAssemblyReference.cache
-C:\Users\Илья Жаров\source\repos\Jason3\StepRepository\obj\Debug\StepRepository.csproj.CoreCompileInputs.cache
-C:\Users\Илья Жаров\source\repos\Jason3\StepRepository\obj\Debug\StepRepository.dll
-C:\Users\Илья Жаров\source\repos\Jason3\StepRepository\obj\Debug\StepRepository.pdb
