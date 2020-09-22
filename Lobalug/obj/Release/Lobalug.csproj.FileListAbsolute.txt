@@ -1,0 +1,12 @@
+C:\Users\Илья Жаров\source\repos\Jason3\Lobalug\bin\Release\Lobalug.exe.config
+C:\Users\Илья Жаров\source\repos\Jason3\Lobalug\bin\Release\Lobalug.exe
+C:\Users\Илья Жаров\source\repos\Jason3\Lobalug\bin\Release\Lobalug.pdb
+C:\Users\Илья Жаров\source\repos\Jason3\Lobalug\bin\Release\MenuMasterLib.dll
+C:\Users\Илья Жаров\source\repos\Jason3\Lobalug\bin\Release\StepRepository.dll
+C:\Users\Илья Жаров\source\repos\Jason3\Lobalug\bin\Release\MenuMasterLib.pdb
+C:\Users\Илья Жаров\source\repos\Jason3\Lobalug\bin\Release\StepRepository.pdb
+C:\Users\Илья Жаров\source\repos\Jason3\Lobalug\obj\Release\Lobalug.csprojAssemblyReference.cache
+C:\Users\Илья Жаров\source\repos\Jason3\Lobalug\obj\Release\Lobalug.csproj.CoreCompileInputs.cache
+C:\Users\Илья Жаров\source\repos\Jason3\Lobalug\obj\Release\Lobalug.csproj.CopyComplete
+C:\Users\Илья Жаров\source\repos\Jason3\Lobalug\obj\Release\Lobalug.exe
+C:\Users\Илья Жаров\source\repos\Jason3\Lobalug\obj\Release\Lobalug.pdb

@@ -1,0 +1,10 @@
+C:\Users\Илья Жаров\source\repos\Jason3\MenuMasterPrototype\bin\Release\MenuMasterPrototype.exe.config
+C:\Users\Илья Жаров\source\repos\Jason3\MenuMasterPrototype\bin\Release\MenuMasterPrototype.exe
+C:\Users\Илья Жаров\source\repos\Jason3\MenuMasterPrototype\bin\Release\MenuMasterPrototype.pdb
+C:\Users\Илья Жаров\source\repos\Jason3\MenuMasterPrototype\obj\Release\MenuMasterPrototype.csprojAssemblyReference.cache
+C:\Users\Илья Жаров\source\repos\Jason3\MenuMasterPrototype\obj\Release\MenuMasterPrototype.csproj.CoreCompileInputs.cache
+C:\Users\Илья Жаров\source\repos\Jason3\MenuMasterPrototype\obj\Release\MenuMasterPrototype.exe
+C:\Users\Илья Жаров\source\repos\Jason3\MenuMasterPrototype\obj\Release\MenuMasterPrototype.pdb
+C:\Users\Илья Жаров\source\repos\Jason3\MenuMasterPrototype\bin\Release\MenuMasterLib.dll
+C:\Users\Илья Жаров\source\repos\Jason3\MenuMasterPrototype\bin\Release\MenuMasterLib.pdb
+C:\Users\Илья Жаров\source\repos\Jason3\MenuMasterPrototype\obj\Release\MenuMasterPrototype.csproj.CopyComplete

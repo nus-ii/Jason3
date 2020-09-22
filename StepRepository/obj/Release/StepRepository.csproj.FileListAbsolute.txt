@@ -1,0 +1,5 @@
+C:\Users\Илья Жаров\source\repos\Jason3\StepRepository\bin\Release\StepRepository.dll
+C:\Users\Илья Жаров\source\repos\Jason3\StepRepository\bin\Release\StepRepository.pdb
+C:\Users\Илья Жаров\source\repos\Jason3\StepRepository\obj\Release\StepRepository.csproj.CoreCompileInputs.cache
+C:\Users\Илья Жаров\source\repos\Jason3\StepRepository\obj\Release\StepRepository.dll
+C:\Users\Илья Жаров\source\repos\Jason3\StepRepository\obj\Release\StepRepository.pdb

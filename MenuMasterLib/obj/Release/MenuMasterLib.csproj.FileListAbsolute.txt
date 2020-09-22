@@ -1,0 +1,5 @@
+C:\Users\Илья Жаров\source\repos\Jason3\MenuMasterLib\bin\Release\MenuMasterLib.dll
+C:\Users\Илья Жаров\source\repos\Jason3\MenuMasterLib\bin\Release\MenuMasterLib.pdb
+C:\Users\Илья Жаров\source\repos\Jason3\MenuMasterLib\obj\Release\MenuMasterLib.csproj.CoreCompileInputs.cache
+C:\Users\Илья Жаров\source\repos\Jason3\MenuMasterLib\obj\Release\MenuMasterLib.dll
+C:\Users\Илья Жаров\source\repos\Jason3\MenuMasterLib\obj\Release\MenuMasterLib.pdb
