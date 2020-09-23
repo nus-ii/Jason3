@@ -17,7 +17,7 @@ namespace Jason3
 
             //var c = CultureInfo.GetCultureInfo("ru-Ru");
 
-            StepRepository.StepRepository stepRepository = new StepRepository.StepRepository(@"C:\stepsDataClean\cleanDataString.csv");
+            StepRepository.StepRepositoryFile stepRepository = new StepRepository.StepRepositoryFile(@"C:\stepsDataClean\cleanDataString.csv");
 
             var Dataparsed = stepRepository.GetAll();//inData.Select(s => s.Split(';')).Select(i => new Tuple<DateTime, LazyItem>(DateTime.Parse(i[0], c), new LazyItem(i[1])));
 

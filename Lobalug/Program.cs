@@ -12,7 +12,7 @@ namespace Lobalug
         static void Main(string[] args)
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            StepRepository.StepRepository stepRepository = new StepRepository.StepRepository(@"C:\stepsDataClean\cleanDataString.csv");
+            StepRepository.StepRepositoryFile stepRepository = new StepRepository.StepRepositoryFile(@"C:\stepsDataClean\cleanDataString.csv");
             CommonProperty CommonProperty = new CommonProperty(stepRepository,new LobalugSettings());
 
             MenuMasterAction<CommonProperty> mainMenu = new MenuMasterAction<CommonProperty>();
@@ -86,7 +86,7 @@ namespace Lobalug
             while (cart <= to)
             {
                 var val = data.FirstOrDefault(v=>v.TargetDate.Date==cart);
-                if (cart == null)
+                if (val == null)
                 {
                     Console.WriteLine(cart.ToString("dd.MM.yyy"));
                 }

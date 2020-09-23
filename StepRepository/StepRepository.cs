@@ -8,25 +8,25 @@ using System.Threading.Tasks;
 
 namespace StepRepository
 {
-    public class StepRepository : IStepRepository
+    public class StepRepositoryFile : IStepRepository
     {
-        private readonly List<StepAtDay> values;
+        private List<StepAtDay> values;
 
-        private readonly string path;
+        private string Path { set; get; }
 
-        private readonly string cultureName;
+        private string CultureName { set; get; }
 
-        private readonly char separatorVale;
+        private CultureInfo CultureInfo { set; get; }
 
-        public StepRepository(string ConnectionString, string culture="ru-Ru",char separator=';')
+        private char SeparatorValue { set; get; }
+
+        public StepRepositoryFile(string connectionString, string culture = "ru-Ru", char separator = ';')
         {
-            path = ConnectionString;
-            cultureName = culture;
-            separatorVale = separator;
-            CultureInfo cultureInfo = CultureInfo.GetCultureInfo(cultureName);
-
-            string[] inData = File.ReadAllLines(ConnectionString);
-            values = inData.Select(l=>l.Split(separator)).Select(a=>new StepAtDay(DateTime.Parse(a[0], cultureInfo),a[1])).ToList();            
+            Path = connectionString;
+            CultureName = culture;
+            SeparatorValue = separator;
+            CultureInfo = CultureInfo.GetCultureInfo(culture);
+            ReadFromFile();
         }
 
         public StepAtDay Get(DateTime day)
@@ -39,42 +39,31 @@ namespace StepRepository
             return values;
         }
 
-        public void Insert(DateTime day, int Steps)
+        public void Insert(List<StepAtDay> newValues)
         {
-            throw new NotImplementedException();
+            values=values.Union(newValues, new StepAtDayComparere()).OrderBy(i => i.TargetDate).ToList(); 
+            List<string> lines = values.Select(i => $"{i.TargetDate.Date.ToString(CultureInfo.DateTimeFormat.ShortDatePattern)}{SeparatorValue}{i.Value}").ToList();
+            File.WriteAllLines(Path, lines);
+            ReadFromFile();
+        }
+
+        private void ReadFromFile()
+        {   
+            string[] inData = File.ReadAllLines(Path);
+            values = inData.Select(l => l.Split(SeparatorValue)).Select(a => new StepAtDay(DateTime.Parse(a[0], CultureInfo), a[1])).ToList();
         }
     }
 
-    public class LazyItem
+    class StepAtDayComparere : IEqualityComparer<StepAtDay>
     {
-        private int? hiddedValue;
-
-        private readonly string stringValue;
-
-        public int Value
+        public bool Equals(StepAtDay x, StepAtDay y)
         {
-            get
-            {
-                if (hiddedValue.HasValue)
-                {
-                    return hiddedValue.Value;
-                }
-                else
-                {
-                    hiddedValue = Int32.Parse(stringValue);
-                    return hiddedValue.Value;
-                }
-            }
+            return x.TargetDate.Date.Equals(y.TargetDate.Date) && (x.Value.Equals(y.Value));
         }
 
-        public LazyItem(string value)
+        public int GetHashCode(StepAtDay obj)
         {
-            stringValue = value;
-        }
-
-        public LazyItem(int value)
-        {
-            hiddedValue = value;
+            return obj.TargetDate.GetHashCode() + obj.Value.GetHashCode();
         }
     }
 }

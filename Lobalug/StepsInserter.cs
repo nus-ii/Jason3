@@ -4,18 +4,19 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using StepRepository;
 
 namespace Lobalug
 {
      public static class StepsInserter
     {
-        public static void StepInsertMain(CommonProperty settings)
+        public static void StepInsertMain(CommonProperty commonProperty)
         {
             string fileId = Guid.NewGuid().ToString().Split('-')[0];
 
             DateTime lastDate = InputLastDate();
             int steps = 0;
-            List<StepsInDay> data = new List<StepsInDay>();
+            List<StepAtDay> data = new List<StepAtDay>();
 
             for (; ; )
             {
@@ -23,24 +24,12 @@ namespace Lobalug
 
                 if (ReadSteps(ref steps))
                 {
-                    data.Add(new StepsInDay
-                    {
-                        Day = lastDate,
-                        Steps = steps
-                    });
+                    data.Add(new StepAtDay(lastDate,steps));
                     lastDate = lastDate.AddDays(-1);
                 }
                 else
-                {
-                    List<string> resultData = new List<string>();
-
-                    foreach (var ds in data)
-                    {
-                        resultData.Add(ds.ToString());
-                    }
-
-                    File.WriteAllLines(@"C:\steps\" + fileId + ".csv", resultData);
-                    //break;
+                {          
+                    commonProperty._repository.Insert(data);
                 }
             }
         }
@@ -68,7 +57,7 @@ namespace Lobalug
 
         private static DateTime InputLastDate()
         {
-            Console.WriteLine("Input last date in format dd-MM-yyyy");
+            Console.WriteLine("Input last date in format dd.MM.yyyy");
             string date = Console.ReadLine();
 
             DateTime result = DateTime.Parse(date);

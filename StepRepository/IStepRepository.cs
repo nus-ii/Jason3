@@ -12,6 +12,6 @@ namespace StepRepository
 
         StepAtDay Get(DateTime day);
 
-        void Insert(DateTime day, int Steps);
+        void Insert(List<StepAtDay> data);
     }
 }

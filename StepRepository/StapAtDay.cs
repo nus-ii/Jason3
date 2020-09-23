@@ -24,12 +24,22 @@ namespace StepRepository
                 }
                 return realValue.Value;
             }
+            set
+            {
+                realValue = value;
+            }
         }
 
-        public StepAtDay(DateTime day,string step)
+        public StepAtDay(DateTime day,string steps)
         {
             TargetDate = day;
-            lazyValue = step;
+            lazyValue = steps;
+        }
+
+        public StepAtDay(DateTime day, int steps)
+        {
+            TargetDate = day;
+            realValue = steps;
         }
     }
 }
