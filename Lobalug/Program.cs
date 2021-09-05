@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MenuMasterLib;
+using StepRepository;
 
 namespace Lobalug
 {
@@ -24,16 +25,14 @@ namespace Lobalug
 
             mainMenu.AddItem("Input step`s data", StepsInserter.StepInsertMain);
 
-            mainMenu.AddItem("Analize data", delegate { Console.WriteLine("Sorry, we are under construction"); });
+            mainMenu.AddItem("Analize data", SummaryPrinter.AnalizeData);
             
             mainMenu.PrintAndWait(CommonProperty);
         }
     }
 
     public static class SummaryPrinter
-    {
-       
-
+    {  
         public static void PrintForDay(CommonProperty property)
         {
             
@@ -46,7 +45,7 @@ namespace Lobalug
                     Console.WriteLine("_________________________________________________________");
 
                 }
-            }            
+            }           
 
         }
 
@@ -91,6 +90,21 @@ namespace Lobalug
                     Console.WriteLine(cart.ToString("dd.MM.yyy"));
                 }
                 cart = cart.AddDays(1);
+            }
+        }
+
+        public static void AnalizeData(CommonProperty property)
+        {
+            MenuMasterFunc<List<StepAtDay>,List<string>> aMenu = new MenuMasterFunc<List<StepAtDay>,List<string>>();
+            var data = property._repository.GetAll();
+
+            aMenu.AddItem("Jason3", DataAnalizer.GetJason3Calendare);
+
+            var result=aMenu.PrintAndWait(data);
+
+            foreach(var s in result)
+            {
+                Console.WriteLine(s);
             }
         }
     }

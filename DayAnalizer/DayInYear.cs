@@ -4,11 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jason3
+namespace DayAnalizer
 {
-    /// <summary>
-    /// Класс описывает положение дня в году, например: вторая суббота вторника
-    /// </summary>
     public class DayInYear
     {
         /// <summary>
@@ -33,7 +30,7 @@ namespace Jason3
             CountertDayInWeek = 0;
 
             DateTime cart = new DateTime(date.Year, date.Month, 1);
-            while (cart.Day <= date.Day&&cart.Month==date.Month)
+            while (cart.Day <= date.Day && cart.Month == date.Month)
             {
                 if (cart.DayOfWeek == DayOfWeek)
                 {

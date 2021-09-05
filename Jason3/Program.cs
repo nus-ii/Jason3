@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using StepRepository;
+using DayAnalizer;
 
 namespace Jason3
 {
@@ -23,7 +24,7 @@ namespace Jason3
 
             var years = Dataparsed.Select(i => i.TargetDate.Year).Distinct().Where(i => i != 2015 && i != DateTime.Now.Year);
 
-            var targetDays = DayAnalizer.GetDaysLike(years, DateTime.Now, true).ToList();
+            var targetDays = DayAnalizer.DayAnalizer.GetDaysLike(years, DateTime.Now, true).ToList();
 
             var month = targetDays.Select(d => d.Month).Distinct().First();
 

@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lobalug", "Lobalug\Lobalug.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StepRepository", "StepRepository\StepRepository.csproj", "{D1F357EB-D963-4ABC-A746-5AB707081135}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DayAnalizer", "DayAnalizer\DayAnalizer.csproj", "{F3993BA4-DDA4-462C-B100-BB604F0EA867}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{D1F357EB-D963-4ABC-A746-5AB707081135}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1F357EB-D963-4ABC-A746-5AB707081135}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1F357EB-D963-4ABC-A746-5AB707081135}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3993BA4-DDA4-462C-B100-BB604F0EA867}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3993BA4-DDA4-462C-B100-BB604F0EA867}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3993BA4-DDA4-462C-B100-BB604F0EA867}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3993BA4-DDA4-462C-B100-BB604F0EA867}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
