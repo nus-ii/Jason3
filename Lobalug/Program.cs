@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MenuMasterLib;
 using StepRepository;
+using System.IO;
 
 namespace Lobalug
 {
@@ -35,7 +36,6 @@ namespace Lobalug
     {  
         public static void PrintForDay(CommonProperty property)
         {
-            
             while(DateTime.TryParse(Console.ReadLine(), out DateTime date))
             {
                 var value = property._repository.Get(date);
@@ -43,10 +43,8 @@ namespace Lobalug
                 {
                     Console.WriteLine($" {value.Value}");
                     Console.WriteLine("_________________________________________________________");
-
                 }
-            }           
-
+            }  
         }
 
 
@@ -98,7 +96,9 @@ namespace Lobalug
             MenuMasterFunc<List<StepAtDay>,List<string>> aMenu = new MenuMasterFunc<List<StepAtDay>,List<string>>();
             var data = property._repository.GetAll();
 
-            aMenu.AddItem("Jason3", DataAnalizer.GetJason3Calendare);
+            aMenu.AddItem("Ghost Race Calendar", DataAnalizer.GhostRaceCalendar);
+            aMenu.AddItem("Series", DataAnalizer.GetSeriesRating);
+            aMenu.AddItem("Steps in Month", DataAnalizer.StepsInMonth);
 
             var result=aMenu.PrintAndWait(data);
 
@@ -106,6 +106,15 @@ namespace Lobalug
             {
                 Console.WriteLine(s);
             }
+
+            Console.WriteLine("Input file name:");
+            var fileName = Console.ReadLine();
+
+            if(!string.IsNullOrEmpty(fileName))
+            {
+                File.WriteAllLines(fileName,result);
+            }
+
         }
     }
 }

@@ -50,7 +50,7 @@ namespace StepRepository
         private void ReadFromFile()
         {   
             string[] inData = File.ReadAllLines(Path);
-            values = inData.Select(l => l.Split(SeparatorValue)).Select(a => new StepAtDay(DateTime.Parse(a[0], CultureInfo), a[1])).ToList();
+            values = inData.Where(l => !string.IsNullOrEmpty(l) &&l.Contains(';')).Select(l => l.Split(SeparatorValue)).Select(a => new StepAtDay(DateTime.Parse(a[0], CultureInfo), a[1])).ToList();
         }
     }
 
