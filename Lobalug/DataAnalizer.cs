@@ -131,6 +131,33 @@ namespace Lobalug
             List<string> result = stepsInMonths.Select(i => { return i.ToString(); }).ToList();
             return result;
         }
+
+        public static List<string> ReTerget(List<StepAtDay> Dataparsed,int target,DateTime cDate)
+        {
+            List<string> result = new List<string>();
+
+            var targetMonthData = Dataparsed.Where(i => i.TargetDate.Year == cDate.Year && i.TargetDate.Month == cDate.Month);
+            var targetMonthLength = DaysInThisMonth(cDate.Month, cDate.Year);
+            int newTarget = 0;
+
+            newTarget = ((target * targetMonthLength) - targetMonthData.Select(i => i.Value).Sum()) / (targetMonthLength - targetMonthData.Count());
+
+            result.Add($"New target: {newTarget}");
+            return result;
+        }
+
+        private static int DaysInThisMonth(int month,int year)
+        {
+            int result = 0;
+            var cartDate = new DateTime(year, month, 1);
+            while (cartDate.Month == month)
+            {
+                result++;
+                cartDate=cartDate.AddDays(1);
+                
+            }
+            return result;
+        }
     }
 
     public class StepsInMonth{

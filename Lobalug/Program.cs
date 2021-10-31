@@ -91,15 +91,20 @@ namespace Lobalug
             }
         }
 
+
+        /// <summary>
+        /// Пункт меню анализа данных
+        /// </summary>
+        /// <param name="property"></param>
         public static void AnalizeData(CommonProperty property)
         {
-            MenuMasterFunc<List<StepAtDay>,List<string>> aMenu = new MenuMasterFunc<List<StepAtDay>,List<string>>();
-            var data = property._repository.GetAll();
-
+            MenuMasterFunc<List<StepAtDay>,List<string>> aMenu = new MenuMasterFunc<List<StepAtDay>,List<string>>();   
             aMenu.AddItem("Ghost Race Calendar", DataAnalizer.GhostRaceCalendar);
             aMenu.AddItem("Series", DataAnalizer.GetSeriesRating);
             aMenu.AddItem("Steps in Month", DataAnalizer.StepsInMonth);
+            aMenu.AddItem("New target", ReTergetCover);
 
+            var data = property._repository.GetAll();
             var result=aMenu.PrintAndWait(data);
 
             foreach(var s in result)
@@ -115,6 +120,27 @@ namespace Lobalug
                 File.WriteAllLines(fileName,result);
             }
 
+        }
+
+
+        private static List<string> ReTergetCover(List<StepAtDay> data)
+        {
+            int target = 0;
+            bool succeedParse = false;
+            while (!succeedParse)
+            {
+                Console.Clear();
+                Console.Write("Input target value:");
+                var targetCandidate = Console.ReadLine();
+
+                succeedParse = int.TryParse(targetCandidate, out target);
+
+            }
+
+            var result = DataAnalizer.ReTerget(data, target,DateTime.Now);
+
+
+            return result;
         }
     }
 }
