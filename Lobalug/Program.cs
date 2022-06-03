@@ -26,7 +26,7 @@ namespace Lobalug
 
             mainMenu.AddItem("Input step`s data", StepsInserter.StepInsertMain);
 
-            mainMenu.AddItem("Analize data", SummaryPrinter.AnalizeData);
+            mainMenu.AddItem("Analysis data", SummaryPrinter.AnalysisData);
             
             mainMenu.PrintAndWait(CommonProperty);
         }
@@ -96,12 +96,12 @@ namespace Lobalug
         /// Пункт меню анализа данных
         /// </summary>
         /// <param name="property"></param>
-        public static void AnalizeData(CommonProperty property)
+        public static void AnalysisData(CommonProperty property)
         {
             MenuMasterFunc<List<StepAtDay>,List<string>> aMenu = new MenuMasterFunc<List<StepAtDay>,List<string>>();   
-            aMenu.AddItem("Ghost Race Calendar", DataAnalizer.GhostRaceCalendar);
-            aMenu.AddItem("Series", DataAnalizer.GetSeriesRating);
-            aMenu.AddItem("Steps in Month", DataAnalizer.StepsInMonth);
+            aMenu.AddItem("Ghost Race Calendar", DataAnalyzer.GhostRaceCalendar);
+            aMenu.AddItem("Series", DataAnalyzer.GetSeriesRating);
+            aMenu.AddItem("Steps in Month", DataAnalyzer.StepsInMonth);
             aMenu.AddItem("New target", ReTergetCover);
 
             var data = property._repository.GetAll();
@@ -137,7 +137,7 @@ namespace Lobalug
 
             }
 
-            var result = DataAnalizer.ReTerget(data, target,DateTime.Now);
+            var result = DataAnalyzer.TargetRecalculate(data, target,DateTime.Now);
 
 
             return result;

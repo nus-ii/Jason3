@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
 using DayAnalizer;
@@ -8,34 +10,31 @@ using StepRepository;
 
 namespace Lobalug
 {
-    public class DataAnalizer
+    /// <summary>
+    /// Класс - держатель логики анализа данных
+    /// </summary>
+    public class DataAnalyzer
     {
-        public static List<string> GhostRaceCalendar(List<StepAtDay> Dataparsed)
+        /// <summary>
+        /// Построение календаря соревнования с призраком (данные за прошлые годы приведённые к календарным дням в этом году)
+        /// </summary>
+        /// <param name="parsedData">Данные о шагах</param>
+        /// <returns></returns>
+        public static List<string> GhostRaceCalendar(List<StepAtDay> parsedData)
         {
             List<string> result = new List<string>();
 
             var currentDate = DateTime.Now;
-            var years = Dataparsed.Select(i => i.TargetDate.Year).Distinct().Where(i => i != 2015 && i != DateTime.Now.Year);
+            var years = parsedData.Select(i => i.TargetDate.Year).Distinct().Where(i => i != 2015 && i != DateTime.Now.Year);
 
             for (int w = 0; w < 90; w++)
             {
                 var targetDays = DayAnalizer.DayAnalizer.GetDaysLike(years, currentDate, true).ToList();
-                List<StepAtDay> preSelected = new List<StepAtDay>();
-                foreach (var i in Dataparsed)
-                {
-                    if (targetDays.Contains(i.TargetDate.Date))
-                    {
-                        preSelected.Add(i);
-                    }
-                }
-
-                var step = preSelected.Select(i => i.Value > 1500 ? i.Value : 1500);
+                var step = parsedData.Where(i => targetDays.Contains(i.TargetDate.Date)).ToList().Select(i => i.Value);
 
                 var min = step.Min();
                 var avg = Convert.ToInt32(Math.Round(step.Average(), 0));
                 var max = step.Max();
-
-                //result.Add($"{currentDate.ToString("dd.MM.yyyy")};{step.Min()};{Math.Round(step.Average(), 0)};{step.Max()}");
 
                 result.Add(new String('_', 47));
                 result.Add(currentDate.ToString("dd.MM.yyyy"));
@@ -49,14 +48,21 @@ namespace Lobalug
             return result;
         }
 
+        /// <summary>
+        /// Метод получения стрелочки для календаря соревнования с призраком
+        /// </summary>
+        /// <param name="value">Значение для отображения</param>
+        /// <param name="maxValue">Максимальное значение</param>
+        /// <param name="maxLength">Максимальная длинна</param>
+        /// <param name="filler">Символ заполнения стрелочки</param>
+        /// <param name="label">Название</param>
+        /// <param name="printValue">Печатать значение или нет</param>
+        /// <returns></returns>
         private static string GetArrow(int value,int maxValue,int maxLength, string filler,string label,bool printValue=true)
         {
-            string result = "";
-
-             
             var charValue = maxValue/ maxLength;
             int chars = value / charValue;
-            result = chars <= maxLength ? filler+">" : "~>";
+            var result = chars <= maxLength ? filler+">" : "~>";
            
             chars = chars <= maxLength ? chars : maxLength;
 
@@ -71,15 +77,13 @@ namespace Lobalug
             return result;
         }
 
-        public static List<string> GetSeriesRating(List<StepAtDay> Dataparsed)
+        public static List<string> GetSeriesRating(List<StepAtDay> parsedData)
         {
-            List<string> result = new List<string>();
-
             List<StepSeries> stepSeries = new List<StepSeries>();
             int targetValue = 8000;
 
             bool activeSeriesFlag = false;
-            foreach (var sad in Dataparsed)
+            foreach (var sad in parsedData)
             {
                 if (sad.Value >= targetValue)
                 {
@@ -99,21 +103,29 @@ namespace Lobalug
                 }
             }
 
-            stepSeries.Sort(delegate (StepSeries a, StepSeries b)
+            var resultCandidate = stepSeries.GroupBy(s => s.Days).ToList().Select(g => new SeriesGroup{Key=g.Key,Values=g.OrderByDescending(i=>i.End) }).OrderByDescending(h=>h.Key);
+
+            List<string> result = new List<string>();
+
+            foreach (var sg in resultCandidate)
             {
-                return b.days.CompareTo(a.days);
-            });
-
-
-            result = stepSeries.Where(s => s.days > 1).Select(s => { return s.ToString(); }).ToList();
+                if (sg.Key >= 2)
+                {
+                    result.Add($"> {sg.Key} days <");
+                    foreach (var s in sg.Values)
+                    {
+                        result.Add(s.ToString());
+                    }
+                }
+            }
 
             return result;
         }
 
-        internal static List<string> StepsInMonth(List<StepAtDay> Dataparsed)
+        internal static List<string> StepsInMonth(List<StepAtDay> parsedData)
         {
             List<StepsInMonth> stepsInMonths = new List<StepsInMonth>();
-            foreach (var sad in Dataparsed)
+            foreach (var sad in parsedData)
             {
                 var candidates = stepsInMonths.Where(i => i.Month == sad.TargetDate.Month && sad.TargetDate.Year == i.Year);
 
@@ -132,11 +144,11 @@ namespace Lobalug
             return result;
         }
 
-        public static List<string> ReTerget(List<StepAtDay> Dataparsed,int target,DateTime cDate)
+        public static List<string> TargetRecalculate(List<StepAtDay> parsedData,int target,DateTime cDate)
         {
             List<string> result = new List<string>();
 
-            var targetMonthData = Dataparsed.Where(i => i.TargetDate.Year == cDate.Year && i.TargetDate.Month == cDate.Month);
+            var targetMonthData = parsedData.Where(i => i.TargetDate.Year == cDate.Year && i.TargetDate.Month == cDate.Month);
             var targetMonthLength = DaysInThisMonth(cDate.Month, cDate.Year);
             int newTarget = 0;
 
@@ -160,6 +172,13 @@ namespace Lobalug
         }
     }
 
+    public class SeriesGroup
+    {
+        public int Key { get; set; }
+
+        public IEnumerable<StepSeries> Values { get; set; }
+    }
+
     public class StepsInMonth{
 
         public int Month;
@@ -168,28 +187,22 @@ namespace Lobalug
 
         public int Steps;
 
-        public int days;
+        public int Days;
 
-        public int Avg
+        public int Avg => Steps / Days;
+
+        public StepsInMonth(int year, int month, int steps)
         {
-            get
-            {
-                return Steps / days;
-            }
+            this.Year = year;
+            this.Month = month;
+            this.Steps = steps;
+            Days = 1;
         }
 
-        public StepsInMonth(int Year, int Month, int Steps)
+        public void AddSteps(int steps)
         {
-            this.Year = Year;
-            this.Month = Month;
-            this.Steps = Steps;
-            days = 1;
-        }
-
-        public void AddSteps(int Steps)
-        {
-            this.Steps += Steps;
-            days++;
+            this.Steps += steps;
+            Days++;
         }
 
         public override string ToString()
@@ -202,32 +215,26 @@ namespace Lobalug
 
     public class StepSeries
     {
-        public DateTime start;
+        public DateTime Start;
 
-        public DateTime end
-        {
-            get
-            {
-                return start.AddDays(days);
-            }
-        }
+        public DateTime End => Start.AddDays(Days);
 
-        public int days;
+        public int Days;
 
         public StepSeries(DateTime start)
         {
-            this.start = start;
-            days = 1;
+            this.Start = start;
+            Days = 1;
         }
 
         public void AddDay()
         {
-            days++;
+            Days++;
         }
 
         public override string ToString()
         {
-            string result = $"Days: {this.days} start:{this.start.ToString("dd.MM.yyyy")} end:{this.end.ToString("dd.MM.yyyy")}";
+            string result = $"start:{this.Start:dd.MM.yyyy} end:{this.End:dd.MM.yyyy}";
             return result;
         }
 
