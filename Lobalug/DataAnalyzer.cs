@@ -37,15 +37,50 @@ namespace Lobalug
                 var max = step.Max();
 
                 result.Add(new String('_', 47));
-                result.Add(currentDate.ToString("dd.MM.yyyy"));
-                result.Add(GetArrow(min, 17500, 35, "-", "min"));
-                result.Add(GetArrow(avg, 17500, 35,"-","avg"));
-                result.Add(GetArrow(max, 17500, 35, "-", "max"));
-                result.Add(GetArrow(17500, 17500, 35, "=", "fact",false));
+                result.Add(currentDate.ToString("dd.MM.yyyy")+" "+GetDayPosition(currentDate));
+                result.Add(GetArrow(min, 17500, 35, "=", "min"));
+                result.Add(GetArrow(avg, 17500, 35,"=","avg"));
+                result.Add(GetArrow(max, 17500, 35, "=", "max"));
+                result.Add(GetArrow(17500, 17500, 35, "=", "fact",false,"|",new List<int>(){8000}));
 
                 currentDate = currentDate.AddDays(1);
             }
             return result;
+        }
+
+        private static string GetDayPosition(DateTime date)
+        {
+            var position=DayAnalizer.DayAnalizer.GetDayOrder(date);
+            string ordinal = ToOrdinal(position);
+            string dayOfWeek = date.DayOfWeek.ToString().ToLower();
+            string month = GetMonth(date).ToLower();
+
+            return string.Format($"{ordinal} {dayOfWeek} of {month}");
+        }
+
+        private static string ToOrdinal(int position)
+        {
+            Dictionary<int, string> ordinalNumerals = new Dictionary<int, string>() {{1,"first"},{2,"second"},{3,"third" },{4,"fourth"},{5,"fifth"},{6,"sixth"}};
+
+            if (ordinalNumerals.ContainsKey(position))
+            {
+                return ordinalNumerals[position];
+            }
+
+            return position.ToString();
+        }
+
+        private static string GetMonth(DateTime date)
+        {
+            Dictionary<int, string> monthsDictionary = new Dictionary<int, string>() { { 1, "January " }, { 2, "February" }, { 3, "March" }, { 4, "April" },{5,"May "}, { 6, "June" }, { 7, "July" },
+                { 8, "August" }, { 9, "September" }, { 10, "October" }, { 11, "November " }, { 12, "December " }};
+
+            if (monthsDictionary.ContainsKey(date.Month))
+            {
+                return monthsDictionary[date.Month];
+            }
+
+            throw new Exception("monthsDictionary");
         }
 
         /// <summary>
@@ -58,22 +93,36 @@ namespace Lobalug
         /// <param name="label">Название</param>
         /// <param name="printValue">Печатать значение или нет</param>
         /// <returns></returns>
-        private static string GetArrow(int value,int maxValue,int maxLength, string filler,string label,bool printValue=true)
+        private static string GetArrow(int value,int maxValue,int maxLength, string filler,string label,bool printValue=true,string altFiller="-",List<int> altFillerFor=null)
         {
+            bool altFillerVaild = altFillerFor!=null;
             var charValue = maxValue/ maxLength;
             int chars = value / charValue;
-            var result = chars <= maxLength ? filler+">" : "~>";
-           
             chars = chars <= maxLength ? chars : maxLength;
 
-            for(int i = 0; i < chars-1; i++)
+            var result = "";
+            for (int i = 0; i < chars-1; i++)
             {
-                result = filler+result;
+                bool normalFiller = true;
+
+                if (altFillerVaild)
+                {
+                    var aBound = i * charValue;
+                    var bBound = (i+1) * charValue;
+
+                    if (altFillerFor.Any(q => q >= aBound && q < bBound))
+                    {
+                        normalFiller = false;
+                    }
+                }
+
+                result = normalFiller ? result + filler : result + altFiller;
             }
 
             var factLabel = string.IsNullOrEmpty(label) ? "" : label;
             var factValue = printValue ? $": {value}" : "";
-            result = $"{result}{factLabel}{factValue}";
+            var ending= value / charValue <= maxLength ? ">" : "~>";
+            result = $"{result}{ending}{factLabel}{factValue}";
             return result;
         }
 

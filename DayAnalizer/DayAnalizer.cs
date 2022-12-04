@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -53,6 +54,12 @@ namespace DayAnalizer
                 return null;
             }
             return cart;
+        }
+
+        public static int GetDayOrder(DateTime date)
+        {
+            DayInYear dayInYear = new DayInYear(date);
+            return dayInYear.CountertDayInWeek;
         }
     }
 }
