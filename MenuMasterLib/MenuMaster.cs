@@ -123,17 +123,17 @@ namespace MenuMasterLib
 
     public class MenuMasterFunc<T,R> where T : class where R: class
     {
-        Dictionary<int, MenuFuncItem<T, R>> Items;
+        Dictionary<int, MenuFuncItem<T, R>> _items;
 
         public MenuMasterFunc()
         {
-            Items = new Dictionary<int, MenuFuncItem<T, R>>();
+            _items = new Dictionary<int, MenuFuncItem<T, R>>();
         }
 
-        public void AddItem(string Name, Func<T, R> Item)
+        public void AddItem(string name, Func<T, R> item)
         {
-            int lastIndex = Items.Count > 0 ? Items.Select(i => i.Key).Max() : 0;
-            Items.Add(++lastIndex, new MenuFuncItem<T, R> { Name = Name, ContainedAction = Item });
+            int lastIndex = _items.Count > 0 ? _items.Select(i => i.Key).Max() : 0;
+            _items.Add(++lastIndex, new MenuFuncItem<T, R> { Name = name, ContainedAction = item });
         }
 
         public R PrintAndWait(T obj)
@@ -142,21 +142,21 @@ namespace MenuMasterLib
             {
                 Console.Clear();
 
-                if (Items.Values.All(i => i.Selected == false))
+                if (_items.Values.All(i => i.Selected == false))
                 {
-                    var first = Items[1];
+                    var first = _items[1];
                     first.Selected = true;
                 }
 
-                foreach (var i in Items)
+                foreach (var i in _items)
                 {
-                    string fmark = i.Value.Selected ? ">" : " ";
-                    string lmark = i.Value.Selected ? "<" : " ";
+                    string firstMark = i.Value.Selected ? ">" : " ";
+                    string lastMark = i.Value.Selected ? "<" : " ";
                     if (i.Value.Selected)
                     {
                         SwithColors();
                     }
-                    Console.WriteLine($"{fmark} {i.Value.Name} {lmark}");
+                    Console.WriteLine($"{firstMark} {i.Value.Name} {lastMark}");
                     if (i.Value.Selected)
                     {
                         SwithColors();
@@ -168,42 +168,45 @@ namespace MenuMasterLib
                 if (k.Key == ConsoleKey.Enter)
                 {
                     Console.Clear();
-                    return Items.First(i => i.Value.Selected).Value.ContainedAction(obj);
-                    //Console.ReadLine();
+                    return _items.First(i => i.Value.Selected).Value.ContainedAction(obj);
                 }
                 else
                 {
-                    int selectedIndex = Items.First(i => i.Value.Selected).Key;
-                    ResetSelected(ref Items);
+                    int selectedIndex = _items.First(i => i.Value.Selected).Key;
+                    ResetSelected(ref _items);
 
-                    if (k.Key == ConsoleKey.UpArrow)
+                    switch (k.Key)
                     {
-                        selectedIndex--;
-                        if (Items.Keys.Contains(selectedIndex))
+                        case ConsoleKey.UpArrow:
                         {
-                            Items[selectedIndex].Selected = true;
-                        }
-                        else
-                        {
-                            var last = Items.Last();
-                            last.Value.Selected = true;
-                        }
+                            selectedIndex--;
+                            if (_items.Keys.Contains(selectedIndex))
+                            {
+                                _items[selectedIndex].Selected = true;
+                            }
+                            else
+                            {
+                                var last = _items.Last();
+                                last.Value.Selected = true;
+                            }
 
-                    }
-
-                    if (k.Key == ConsoleKey.DownArrow)
-                    {
-                        selectedIndex++;
-                        if (Items.Keys.Contains(selectedIndex))
-                        {
-                            Items[selectedIndex].Selected = true;
+                            break;
                         }
-                        else
+                        case ConsoleKey.DownArrow:
                         {
-                            var First = Items.First();
-                            First.Value.Selected = true;
-                        }
+                            selectedIndex++;
+                            if (_items.Keys.Contains(selectedIndex))
+                            {
+                                _items[selectedIndex].Selected = true;
+                            }
+                            else
+                            {
+                                var first = _items.First();
+                                first.Value.Selected = true;
+                            }
 
+                            break;
+                        }
                     }
                 }
 
@@ -220,9 +223,9 @@ namespace MenuMasterLib
 
         private void SwithColors()
         {
-            var ActiveForeground = Console.ForegroundColor;
+            var activeForeground = Console.ForegroundColor;
             Console.ForegroundColor = Console.BackgroundColor;
-            Console.BackgroundColor = ActiveForeground;
+            Console.BackgroundColor = activeForeground;
         }
     }
 

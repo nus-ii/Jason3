@@ -10,7 +10,7 @@ namespace StepRepository
 {
     public class StepRepositoryFile : IStepRepository
     {
-        private List<StepAtDay> values;
+        private List<StepAtDay> _values;
 
         private string Path { set; get; }
 
@@ -31,18 +31,18 @@ namespace StepRepository
 
         public StepAtDay Get(DateTime day)
         {
-            return values.FirstOrDefault(i => i.TargetDate.Date == day.Date);
+            return _values.FirstOrDefault(i => i.TargetDate.Date == day.Date);
         }
 
         public List<StepAtDay> GetAll()
         {
-            return values;
+            return _values;
         }
 
         public void Insert(List<StepAtDay> newValues)
         {
-            values=values.Union(newValues, new StepAtDayComparere()).OrderBy(i => i.TargetDate).ToList(); 
-            List<string> lines = values.Select(i => $"{i.TargetDate.Date.ToString(CultureInfo.DateTimeFormat.ShortDatePattern)}{SeparatorValue}{i.Value}").ToList();
+            _values=_values.Union(newValues, new StepAtDayComparere()).OrderBy(i => i.TargetDate).ToList(); 
+            List<string> lines = _values.Select(i => $"{i.TargetDate.Date.ToString(CultureInfo.DateTimeFormat.ShortDatePattern)}{SeparatorValue}{i.Value}").ToList();
             File.WriteAllLines(Path, lines);
             ReadFromFile();
         }
@@ -50,7 +50,7 @@ namespace StepRepository
         private void ReadFromFile()
         {   
             string[] inData = File.ReadAllLines(Path);
-            values = inData.Where(l => !string.IsNullOrEmpty(l) &&l.Contains(';')).Select(l => l.Split(SeparatorValue)).Select(a => new StepAtDay(DateTime.Parse(a[0], CultureInfo), a[1])).ToList();
+            _values = inData.Where(l => !string.IsNullOrEmpty(l) &&l.Contains(';')).Select(l => l.Split(SeparatorValue)).Select(a => new StepAtDay(DateTime.Parse(a[0], CultureInfo), a[1])).ToList();
         }
     }
 

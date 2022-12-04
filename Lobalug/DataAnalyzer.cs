@@ -77,15 +77,22 @@ namespace Lobalug
             return result;
         }
 
-        public static List<string> GetSeriesRating(List<StepAtDay> parsedData)
+
+        /// <summary>
+        /// Получение списка серий (серия - достижение уели несколько дней подряд)
+        /// </summary>
+        /// <param name="parsedData">Данные о шагах</param>
+        /// <param name="target">Значение цели</param>
+        /// <param name="minDurationSeries">Минимальное длительность серии</param>
+        /// <returns></returns>
+        public static List<string> SeriesRating(List<StepAtDay> parsedData,int target,int minDurationSeries)
         {
             List<StepSeries> stepSeries = new List<StepSeries>();
-            int targetValue = 8000;
 
             bool activeSeriesFlag = false;
             foreach (var sad in parsedData)
             {
-                if (sad.Value >= targetValue)
+                if (sad.Value >= target)
                 {
                     if (activeSeriesFlag)
                     {
@@ -109,7 +116,7 @@ namespace Lobalug
 
             foreach (var sg in resultCandidate)
             {
-                if (sg.Key >= 2)
+                if (sg.Key >= minDurationSeries)
                 {
                     result.Add($"> {sg.Key} days <");
                     foreach (var s in sg.Values)
@@ -144,12 +151,19 @@ namespace Lobalug
             return result;
         }
 
-        public static List<string> TargetRecalculate(List<StepAtDay> parsedData,int target,DateTime cDate)
+        /// <summary>
+        /// Высчитывание новой нормы шагов в день исходя из пройденных шагов и поставленной цели
+        /// </summary>
+        /// <param name="parsedData">Данные о шагах</param>
+        /// <param name="target">Новая цель</param>
+        /// <param name="currentDate">Текущая дата</param>
+        /// <returns></returns>
+        public static List<string> TargetRecalculate(List<StepAtDay> parsedData,int target,DateTime currentDate)
         {
             List<string> result = new List<string>();
 
-            var targetMonthData = parsedData.Where(i => i.TargetDate.Year == cDate.Year && i.TargetDate.Month == cDate.Month);
-            var targetMonthLength = DaysInThisMonth(cDate.Month, cDate.Year);
+            var targetMonthData = parsedData.Where(i => i.TargetDate.Year == currentDate.Year && i.TargetDate.Month == currentDate.Month);
+            var targetMonthLength = DaysInThisMonth(currentDate.Month, currentDate.Year);
             int newTarget = 0;
 
             newTarget = ((target * targetMonthLength) - targetMonthData.Select(i => i.Value).Sum()) / (targetMonthLength - targetMonthData.Count());
@@ -168,6 +182,33 @@ namespace Lobalug
                 cartDate=cartDate.AddDays(1);
                 
             }
+            return result;
+        }
+
+        public static List<string> Distribution(List<StepAtDay> data, int pitch, DateTime firstDate, DateTime lastDate)
+        {
+
+            int maxSteps = data.Select(d => d.Value).Max();
+            var allDays = data.Where(s => s.TargetDate >= firstDate && s.TargetDate <= lastDate).ToList();
+            var allDaysCount = Convert.ToDecimal(allDays.Count);
+            int startRange = 0;
+            int endRange = pitch;
+
+            List<string> result = new List<string>();
+            while (maxSteps >= endRange)
+            {
+                var targetDaysCount = Convert.ToDecimal(allDays.Where(s => s.Value > startRange && s.Value <= endRange).Count());
+
+                var index = Math.Round(targetDaysCount / (allDaysCount / 100),2);
+
+                result.Add(string.Format($"{endRange};{index}"));
+
+                startRange += pitch;
+                endRange += pitch;
+            }
+
+            
+
             return result;
         }
     }
@@ -234,8 +275,7 @@ namespace Lobalug
 
         public override string ToString()
         {
-            string result = $"start:{this.Start:dd.MM.yyyy} end:{this.End:dd.MM.yyyy}";
-            return result;
+            return $"start:{this.Start:dd.MM.yyyy} end:{this.End:dd.MM.yyyy}";
         }
 
     }

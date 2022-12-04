@@ -14,11 +14,11 @@ namespace Lobalug
         static void Main(string[] args)
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            StepRepository.StepRepositoryFile stepRepository = new StepRepository.StepRepositoryFile(@"C:\stepsDataClean\cleanDataString.csv");
-            CommonProperty CommonProperty = new CommonProperty(stepRepository,new LobalugSettings());
+            StepRepositoryFile stepRepository = new StepRepositoryFile(@"C:\stepsDataClean\cleanDataString.csv");
+            CommonProperty commonProperty = new CommonProperty(stepRepository,new LobalugSettings());
 
             MenuMasterAction<CommonProperty> mainMenu = new MenuMasterAction<CommonProperty>();
-            mainMenu.AddItem("Print Summary", SummaryPrinter.Print);
+            mainMenu.AddItem("Print Summary", SummaryPrinter.PrintSummary);
 
             mainMenu.AddItem("Empty Data", SummaryPrinter.EmptyData);
 
@@ -26,9 +26,9 @@ namespace Lobalug
 
             mainMenu.AddItem("Input step`s data", StepsInserter.StepInsertMain);
 
-            mainMenu.AddItem("Analysis data", SummaryPrinter.AnalysisData);
+            mainMenu.AddItem("Analysis data", AnalysisDataPrinter.AnalysisData);
             
-            mainMenu.PrintAndWait(CommonProperty);
+            mainMenu.PrintAndWait(commonProperty);
         }
     }
 
@@ -48,7 +48,7 @@ namespace Lobalug
         }
 
 
-        public static void Print(CommonProperty property)
+        public static void PrintSummary(CommonProperty property)
         {
             var data = property._repository.GetAll();
 
@@ -90,24 +90,27 @@ namespace Lobalug
                 cart = cart.AddDays(1);
             }
         }
+    }
 
-
+    public static class AnalysisDataPrinter
+    {
         /// <summary>
         /// Пункт меню анализа данных
         /// </summary>
         /// <param name="property"></param>
         public static void AnalysisData(CommonProperty property)
         {
-            MenuMasterFunc<List<StepAtDay>,List<string>> aMenu = new MenuMasterFunc<List<StepAtDay>,List<string>>();   
-            aMenu.AddItem("Ghost Race Calendar", DataAnalyzer.GhostRaceCalendar);
-            aMenu.AddItem("Series", DataAnalyzer.GetSeriesRating);
-            aMenu.AddItem("Steps in Month", DataAnalyzer.StepsInMonth);
-            aMenu.AddItem("New target", ReTergetCover);
+            var analysisMenu = new MenuMasterFunc<List<StepAtDay>, List<string>>();
+            analysisMenu.AddItem("Ghost Race Calendar", DataAnalyzer.GhostRaceCalendar);
+            analysisMenu.AddItem("Series", SeriesRatingCover);
+            analysisMenu.AddItem("Steps in Month", DataAnalyzer.StepsInMonth);
+            analysisMenu.AddItem("New target", TargetRecalculateCover);
+            analysisMenu.AddItem("Distribution", DistributionCover);
 
             var data = property._repository.GetAll();
-            var result=aMenu.PrintAndWait(data);
+            var result = analysisMenu.PrintAndWait(data);
 
-            foreach(var s in result)
+            foreach (var s in result)
             {
                 Console.WriteLine(s);
             }
@@ -115,32 +118,37 @@ namespace Lobalug
             Console.WriteLine("Input file name:");
             var fileName = Console.ReadLine();
 
-            if(!string.IsNullOrEmpty(fileName))
+            if (!string.IsNullOrEmpty(fileName))
             {
-                File.WriteAllLines(fileName,result);
+                File.WriteAllLines(fileName, result);
             }
 
         }
 
-
-        private static List<string> ReTergetCover(List<StepAtDay> data)
+        private static List<string> DistributionCover(List<StepAtDay> data)
         {
-            int target = 0;
-            bool succeedParse = false;
-            while (!succeedParse)
-            {
-                Console.Clear();
-                Console.Write("Input target value:");
-                var targetCandidate = Console.ReadLine();
-
-                succeedParse = int.TryParse(targetCandidate, out target);
-
-            }
-
-            var result = DataAnalyzer.TargetRecalculate(data, target,DateTime.Now);
-
+            var pitch = ConsoleHelper.GetIntParameterFromUser("grid pitch", 500);
+            var firstDate = ConsoleHelper.GetDateParameterFromUser("first day", DataHelper.FirstDate(data));
+            var lastDate = ConsoleHelper.GetDateParameterFromUser("last day", DataHelper.LastDate(data));
+            List<string> result = DataAnalyzer.Distribution(data, pitch, firstDate,lastDate);
 
             return result;
         }
+
+        private static List<string> SeriesRatingCover(List<StepAtDay> data)
+        {
+            var target = ConsoleHelper.GetIntParameterFromUser("new target", 8000);
+            var minDurations = ConsoleHelper.GetIntParameterFromUser("min durations", 2);
+            var result = DataAnalyzer.SeriesRating(data,target, minDurations);
+            return result;
+        }
+
+        private static List<string> TargetRecalculateCover(List<StepAtDay> data)
+        {
+            var target = ConsoleHelper.GetIntParameterFromUser("new target", 8000);
+            var result = DataAnalyzer.TargetRecalculate(data, target, DateTime.Now);
+            return result;
+        }
+
     }
 }
