@@ -19,15 +19,10 @@ namespace Lobalug
 
             MenuMasterAction<CommonProperty> mainMenu = new MenuMasterAction<CommonProperty>();
             mainMenu.AddItem("Print Summary", SummaryPrinter.PrintSummary);
-
             mainMenu.AddItem("Empty Data", SummaryPrinter.EmptyData);
-
             mainMenu.AddItem("Print for day", SummaryPrinter.PrintForDay);
-
             mainMenu.AddItem("Input step`s data", StepsInserter.StepInsertMain);
-
             mainMenu.AddItem("Analysis data", AnalysisDataPrinter.AnalysisData);
-            
             mainMenu.PrintAndWait(commonProperty);
         }
     }

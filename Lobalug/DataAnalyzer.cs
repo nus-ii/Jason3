@@ -297,7 +297,7 @@ namespace Lobalug
 
         public override string ToString()
         {
-            string result = $"{this.Month}.{this.Year};{this.Avg}";
+            string result = $"{this.Month}.{this.Year};{this.Avg};{this.Steps}";
             return result;
         }
 
